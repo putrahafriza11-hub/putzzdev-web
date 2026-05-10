@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>⚠️ WhatsApp Bug Tools ⚠️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Efek kedip layar (awalnya hidden) */
+        .flash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.05s ease;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid #ff0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff0000;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px red;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .sub {
+            text-align: center;
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        /* Input nomor */
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #ff4444;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #ff0000;
+            border-radius: 10px;
+            color: #0f0;
+            font-size: 1rem;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            box-shadow: 0 0 10px red;
+        }
+
+        /* Grid fitur */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .feature-btn {
+            background: linear-gradient(135deg, #1a1a2e, #0a0a0a);
+            border: 1px solid #ff4444;
+            border-radius: 12px;
+            padding: 12px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #ff8888;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .feature-btn.active {
+            background: linear-gradient(135deg, #ff0000, #aa0000);
+            color: white;
+            box-shadow: 0 0 15px red;
+            border-color: white;
+        }
+
+        .feature-btn:hover {
+            transform: scale(1.02);
+        }
+
+        /* Tombol Send Bug */
+        .send-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff0000, #8b0000);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px red;
+        }
+
+        /* Status text */
+        .status {
+            text-align: center;
+            color: #0f0;
+            font-size: 0.8rem;
+            margin-top: 15px;
+            font-family: monospace;
+        }
+
+        /* Video container (hidden awal) */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background: black;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Peringatan */
+        .warning {
+            text-align: center;
+            color: #ff8800;
+            font-size: 0.7rem;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-overlay" id="flashOverlay"></div>
+
+<div class="video-container" id="videoContainer">
+    <video id="prankVideo" autoplay muted></video>
+</div>
+
+<div class="container">
+    <h1>⚠️ WHATSAPP BUG TOOLS ⚠️</h1>
+    <div class="sub">[ PRANK MODE - FOR EDUCATIONAL ONLY ]</div>
+
+    <div class="input-group">
+        <label>🎯 TARGET NUMBER (62xxx)</label>
+        <input type="tel" id="targetNumber" placeholder="6281234567890" value="62">
+    </div>
+
+    <div class="features">
+        <div class="feature-btn" data-feature="forclose">🔒 FORCLOSE</div>
+        <div class="feature-btn" data-feature="killdevice">💀 KILL DEVICE</div>
+        <div class="feature-btn" data-feature="crasher">💥 CRASHER</div>
+    </div>
+
+    <button class="send-btn" id="sendBugBtn">🚀 SEND BUG 🚀</button>
+    <div class="status" id="statusText">⚡ Pilih fitur + masukkan nomor target ⚡</div>
+    <div class="warning">⚠️ BUG WHATSAPP BY PUTZZ⚠️</div>
+</div>
+
+<script>
+    // ============ KONFIGURASI ============
+    // GANTI DENGAN RAW URL GITHUB KAMU!
+    const VIDEO_URL = 'https://raw.githubusercontent.com/username/repo/main/prank_video.mp4';
+    const SOUND_URL = 'https://github.com/putrahafriza11-hub/putzzdev-web/blob/main/sound.mp3';
+    // =====================================
+
+    let selectedFeature = null;
+    let audioElement = null;
+
+    // Fungsi untuk efek kedip layar (angker!)
+    function startScreenFlash(duration = 5000) {
+        const flash = document.getElementById('flashOverlay');
+        let startTime = Date.now();
+        
+        function flashLoop() {
+            const elapsed = Date.now() - startTime;
+            if (elapsed >= duration) {
+                flash.style.opacity = '0';
+                return;
+            }
+            
+            // Random opacity antara 0.3 sampai 1
+            const randomOpacity = Math.random() * 0.7 + 0.3;
+            flash.style.opacity = randomOpacity;
+            
+            // Ganti warna background kadang putih kadang merah
+            if (Math.random() > 0.7) {
+                flash.style.background = '#ff0000';
+            } else {
+                flash.style.background = '#ffffff';
+            }
+            
+            requestAnimationFrame(flashLoop);
+        }
+        
+        flash.style.opacity = '0.5';
+        flashLoop();
+    }
+
+    // Fungsi play sound dengan LOOP (ngulang terus sampai di-stop)
+    function playSoundLoop() {
+        if (audioElement) {
+            audioElement.pause();
+            audioElement.currentTime = 0;
+        }
+        audioElement = new Audio(SOUND_URL);
+        audioElement.volume = 1;
+        audioElement.loop = true; // <-- INI YANG MEMBUAT NGULANG TERUS!
+        
+        audioElement.play().catch(e => console.log('Auto-play blocked:', e));
+    }
+
+    // Fungsi stop sound
+    function stopSound() {
+        if (audioElement) {
+            audioElement.pause();
+            audioElement.currentTime = 0;
+            audioElement = null;
+        }
+    }
+
+    // Fungsi play video fullscreen + efek seram
+    function playVideo() {
+        const videoContainer = document.getElementById('videoContainer');
+        const video = document.getElementById('prankVideo');
+        
+        video.src = VIDEO_URL;
+        videoContainer.style.display = 'flex';
+        
+        // Force fullscreen
+        if (videoContainer.requestFullscreen) {
+            videoContainer.requestFullscreen();
+        }
+        
+        video.play().catch(e => console.log('Video play error:', e));
+        
+        // Mulai efek kedip selama video (lebih lama dari durasi video)
+        startScreenFlash(10000);
+        
+        // Play sound LOOP saat video mulai
+        playSoundLoop();
+        
+        // Setelah video selesai, kembali ke normal
+        video.onended = () => {
+            videoContainer.style.display = 'none';
+            document.exitFullscreen().catch(() => {});
+            document.getElementById('statusText').innerHTML = '✅ PRANK SELESAI! 😂 Jangan lupa bilang "Kena Prank ya!"';
+            
+            // Hentikan sound yang lagi loop
+            stopSound();
+            
+            // Hentikan efek kedip
+            setTimeout(() => {
+                document.getElementById('flashOverlay').style.opacity = '0';
+            }, 500);
+        };
+    }
+
+    // ============ EVENT LISTENER ============
+    
+    // Pilih fitur
+    document.querySelectorAll('.feature-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.feature-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedFeature = btn.getAttribute('data-feature');
+            
+            let featureName = '';
+            if (selectedFeature === 'forclose') featureName = 'FORCLOSE';
+            else if (selectedFeature === 'killdevice') featureName = 'KILL DEVICE';
+            else featureName = 'CRASHER';
+            
+            document.getElementById('statusText').innerHTML = `✅ Fitur: ${featureName} siap. Masukkan nomor target.`;
+        });
+    });
+
+    // Tombol Send Bug
+    document.getElementById('sendBugBtn').addEventListener('click', () => {
+        const targetNumber = document.getElementById('targetNumber').value.trim();
+        
+        // Validasi
+        if (!selectedFeature) {
+            document.getElementById('statusText').innerHTML = '❌ Pilih fitur dulu! (Forclose / Kill Device / Crasher)';
+            return;
+        }
+        
+        if (!targetNumber || !targetNumber.match(/^62[0-9]{8,15}$/)) {
+            document.getElementById('statusText').innerHTML = '❌ Nomor target tidak valid! Harus diawali 62 (contoh: 6281234567890)';
+            return;
+        }
+        
+        // Update status dengan efek loading seram
+        let featureDisplay = '';
+        if (selectedFeature === 'forclose') featureDisplay = 'FORCLOSE';
+        else if (selectedFeature === 'killdevice') featureDisplay = 'KILL DEVICE';
+        else featureDisplay = 'CRASHER';
+        
+        document.getElementById('statusText').innerHTML = `🔥 MENGIRIM BUG ${featureDisplay} ke ${targetNumber} 🔥<br>⏳ Mohon tunggu...`;
+        
+        // Efek simulasi loading 2 detik (biar tegang)
+        setTimeout(() => {
+            document.getElementById('statusText').innerHTML = `💀 BUG ${featureDisplay} BERHASIL! 💀<br>⚠️ Aktivasi efek prank... ⚠️`;
+            
+            // Setelah 1 detik lagi, mulai video + suara loop + kedip
+            setTimeout(() => {
+                playVideo();
+            }, 1000);
+        }, 2000);
+    });
+    
+    // Validasi input nomor: hanya angka dan awalan 62
+    document.getElementById('targetNumber').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+        if (!this.value.startsWith('62') && this.value.length > 0) {
+            this.value = '62' + this.value.replace(/^62/, '');
+        }
+    });
+</script>
+</body>
+</html>
