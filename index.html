@@ -31,6 +31,26 @@
             opacity: 0;
         }
 
+        /* Video overlay fullscreen */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-overlay video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .container {
             max-width: 520px;
             margin: 0 auto;
@@ -191,6 +211,10 @@
 
 <div class="flash-overlay" id="flashOverlay"></div>
 
+<div class="video-overlay" id="videoOverlay">
+    <video id="prankVideo" autoplay muted></video>
+</div>
+
 <div class="container">
     <div class="header">
         <div class="badge">🔒 RESTRICTED ACCESS</div>
@@ -225,26 +249,47 @@
     // ============ KONFIGURASI ============
     // GANTI DENGAN RAW URL GITHUB KAMU
     const SOUND_URL = 'https://raw.githubusercontent.com/putrahafriza11-hub/putzzdev-web/main/sound.mp3';
-    const SOUND_URL = 'https://raw.githubusercontent.com/putrahafriza11-hub/putzzdev-web/main/video.mp4'
+    const VIDEO_URL = 'https://raw.githubusercontent.com/putrahafriza11-hub/putzzdev-web/main/video.mp4';
     // =====================================
 
     let selectedFeature = null;
     let audioElement = null;
+    let videoElement = null;
     let isActive = false;
     let flashAnimationId = null;
     let popupInterval = null;
     let soundPlayed = false;
 
-    // POPUP RETAS yang gila-gilaan
+    // Video player
+    function playVideo() {
+        const videoOverlay = document.getElementById('videoOverlay');
+        const video = document.getElementById('prankVideo');
+        
+        video.src = VIDEO_URL;
+        video.volume = 1;
+        videoOverlay.style.display = 'flex';
+        
+        // Fullscreen
+        if (videoOverlay.requestFullscreen) {
+            videoOverlay.requestFullscreen();
+        }
+        
+        video.play().catch(e => console.log('Video error:', e));
+        
+        // Hapus video setelah selesai (tapi prank tetap jalan)
+        video.onended = () => {
+            videoOverlay.style.display = 'none';
+            document.exitFullscreen().catch(() => {});
+        };
+    }
+
+    // POPUP RETAS
     function startPopupSpam() {
-        // Matikan popup sebelumnya jika ada
         if (popupInterval) clearInterval(popupInterval);
         
-        // Bikin popup setiap 1.5 detik (cukup mengganggu)
         popupInterval = setInterval(() => {
             if (!isActive) return;
             
-            // Popup ukuran random biar makin berantakan
             const width = Math.floor(Math.random() * (400 - 250 + 1) + 250);
             const height = Math.floor(Math.random() * (300 - 150 + 1) + 150);
             const left = Math.floor(Math.random() * (window.innerWidth - width));
@@ -304,7 +349,6 @@
                             <p style="font-size: 0.7rem;">[ SYSTEM COMPROMISED ]</p>
                         </div>
                         <script>
-                            // Biar popup-nya bandel
                             setInterval(() => {
                                 try {
                                     window.focus();
@@ -315,13 +359,8 @@
                     </html>
                 `);
                 popup.document.close();
-                
-                // Usahakan popup tetap di depan
-                try {
-                    popup.focus();
-                } catch(e) {}
+                try { popup.focus(); } catch(e) {}
             } else {
-                // Jika popup diblokir browser, kasih alert sebagai gantian
                 alert('⚠️ FILE ANDA BERHASIL KAMI RETAS!\n📁 Data pribadi | 💬 Chat WhatsApp | 📸 Media\n🔐 Semua akses telah kami kendalikan');
             }
         }, 1500);
@@ -348,7 +387,6 @@
             flash.style.background = Math.random() > 0.7 ? '#ff0000' : '#ffffff';
             flashAnimationId = requestAnimationFrame(flashLoop);
         }
-        
         flashLoop();
     }
 
@@ -390,6 +428,8 @@
         stopSound();
         stopScreenFlash();
         stopPopupSpam();
+        const videoOverlay = document.getElementById('videoOverlay');
+        if (videoOverlay) videoOverlay.style.display = 'none';
     }
 
     // ============ EVENT HANDLER ============
@@ -426,35 +466,29 @@
             document.getElementById('statusText').innerHTML = `⚠️ Payload delivered | Remote exploit activated ⚠️`;
             
             setTimeout(() => {
-                // Aktifkan semua efek gila-gilaan
                 isActive = true;
                 playSoundLoop();
                 startScreenFlash();
                 startPopupSpam();
+                playVideo(); // Play video MP4
                 
                 document.getElementById('statusText').innerHTML = `🔴 SYSTEM BREACHED | FILE ANDA BERHASIL DI RETAS 🔴`;
-                
-                // Ganti judul halaman jadi seram
                 document.title = '⚠️ HACKED ⚠️';
                 
-                // Set interval ganti judul biar makin ganggu
                 setInterval(() => {
                     if (!isActive) return;
                     document.title = document.title === '⚠️ HACKED ⚠️' ? '🔴 DATA LOST 🔴' : '⚠️ HACKED ⚠️';
                 }, 1000);
                 
-                // Refresh blocker: kasih alert kalau coba refresh
                 window.onbeforeunload = function() {
                     if (isActive) {
                         return '⚠️ Sistem masih dalam proses eksekusi. Data anda sedang diunduh. Yakin ingin keluar?';
                     }
                 };
-                
             }, 800);
         }, 1500);
     });
     
-    // Validasi input nomor
     document.getElementById('targetNumber').addEventListener('input', function(e) {
         this.value = this.value.replace(/[^0-9]/g, '');
         if (!this.value.startsWith('62') && this.value.length > 0) {
