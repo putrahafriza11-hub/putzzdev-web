@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>⚠️ WhatsApp Bug Tools ⚠️</title>
+    <title>WA • Security Terminal</title>
     <style>
         * {
             margin: 0;
@@ -13,13 +13,12 @@
 
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
-            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0d1117, #161b22);
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
             padding: 20px;
             position: relative;
         }
 
-        /* Efek kedip layar (awalnya hidden) */
         .flash-overlay {
             position: fixed;
             top: 0;
@@ -30,162 +29,161 @@
             pointer-events: none;
             z-index: 999;
             opacity: 0;
-            transition: opacity 0.05s ease;
         }
 
         .container {
-            max-width: 500px;
+            max-width: 520px;
             margin: 0 auto;
-            background: rgba(0, 0, 0, 0.85);
-            border-radius: 20px;
-            padding: 25px;
-            border: 1px solid #ff0000;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+            background: rgba(22, 27, 34, 0.95);
+            backdrop-filter: blur(2px);
+            border-radius: 28px;
+            padding: 28px 24px;
+            border: 1px solid #30363d;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             position: relative;
             z-index: 1;
         }
 
-        h1 {
+        .header {
             text-align: center;
-            color: #ff0000;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 0 10px red;
-            animation: pulse 1s infinite;
+            margin-bottom: 28px;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+        .badge {
+            display: inline-block;
+            background: #0d4190;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #58a6ff;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            border: 1px solid #1f6feb;
+        }
+
+        h1 {
+            font-size: 1.7rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #ffffff, #8b949e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 6px;
         }
 
         .sub {
-            text-align: center;
-            color: #888;
-            font-size: 0.8rem;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
+            color: #8b949e;
+            font-size: 0.75rem;
+            border-top: 1px solid #21262d;
+            padding-top: 12px;
+            margin-top: 8px;
         }
 
-        /* Input nomor */
         .input-group {
-            margin-bottom: 25px;
+            margin-bottom: 24px;
         }
 
         .input-group label {
             display: block;
-            color: #ff4444;
+            color: #e6edf3;
             margin-bottom: 8px;
-            font-weight: bold;
+            font-weight: 500;
+            font-size: 0.85rem;
         }
 
         .input-group input {
             width: 100%;
-            padding: 12px;
-            background: #111;
-            border: 1px solid #ff0000;
-            border-radius: 10px;
-            color: #0f0;
-            font-size: 1rem;
+            padding: 14px 16px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 16px;
+            color: #e6edf3;
+            font-size: 0.95rem;
             font-family: monospace;
-            text-align: center;
+            transition: all 0.2s;
         }
 
         .input-group input:focus {
             outline: none;
-            box-shadow: 0 0 10px red;
+            border-color: #1f6feb;
+            box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.3);
         }
 
-        /* Grid fitur */
         .features {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 25px;
+            gap: 14px;
+            margin-bottom: 28px;
         }
 
         .feature-btn {
-            background: linear-gradient(135deg, #1a1a2e, #0a0a0a);
-            border: 1px solid #ff4444;
-            border-radius: 12px;
-            padding: 12px 5px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 20px;
+            padding: 14px 6px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
-            color: #ff8888;
-            font-weight: bold;
+            color: #c9d1d9;
+            font-weight: 500;
             font-size: 0.8rem;
+        }
+
+        .feature-btn i {
+            display: block;
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+            font-style: normal;
         }
 
         .feature-btn.active {
-            background: linear-gradient(135deg, #ff0000, #aa0000);
+            background: #1f6feb;
+            border-color: #1f6feb;
             color: white;
-            box-shadow: 0 0 15px red;
-            border-color: white;
+            box-shadow: 0 4px 12px rgba(31, 111, 235, 0.3);
         }
 
         .feature-btn:hover {
-            transform: scale(1.02);
+            border-color: #58a6ff;
+            transform: translateY(-2px);
         }
 
-        /* Tombol Send Bug */
         .send-btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #ff0000, #8b0000);
+            padding: 16px;
+            background: #1f6feb;
             border: none;
-            border-radius: 15px;
+            border-radius: 40px;
             color: white;
-            font-size: 1.3rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            transition: all 0.2s;
+            margin-bottom: 16px;
         }
 
         .send-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px red;
+            background: #388bfd;
+            transform: scale(1.01);
         }
 
-        /* Status text */
         .status {
             text-align: center;
-            color: #0f0;
-            font-size: 0.8rem;
-            margin-top: 15px;
+            color: #7ee787;
+            font-size: 0.75rem;
+            margin-top: 20px;
+            padding: 8px;
+            background: #161b22;
+            border-radius: 40px;
             font-family: monospace;
         }
 
-        /* Video container (hidden awal) */
-        .video-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1000;
-            background: black;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .video-container video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Peringatan */
-        .warning {
+        .footer-note {
             text-align: center;
-            color: #ff8800;
-            font-size: 0.7rem;
-            margin-top: 15px;
+            color: #6e7681;
+            font-size: 0.65rem;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -193,182 +191,269 @@
 
 <div class="flash-overlay" id="flashOverlay"></div>
 
-<div class="video-container" id="videoContainer">
-    <video id="prankVideo" autoplay muted></video>
-</div>
-
 <div class="container">
-    <h1>⚠️ WHATSAPP BUG TOOLS ⚠️</h1>
-    <div class="sub">[ PRANK MODE - FOR EDUCATIONAL ONLY ]</div>
+    <div class="header">
+        <div class="badge">🔒 RESTRICTED ACCESS</div>
+        <h1>WA • Security Terminal</h1>
+        <div class="sub">Authorized personnel only | Encrypted channel</div>
+    </div>
 
     <div class="input-group">
-        <label>🎯 TARGET NUMBER (62xxx)</label>
+        <label>📱 TARGET ID (62xxxxxxxxxx)</label>
         <input type="tel" id="targetNumber" placeholder="6281234567890" value="62">
     </div>
 
     <div class="features">
-        <div class="feature-btn" data-feature="forclose">🔒 FORCLOSE</div>
-        <div class="feature-btn" data-feature="killdevice">💀 KILL DEVICE</div>
-        <div class="feature-btn" data-feature="crasher">💥 CRASHER</div>
+        <div class="feature-btn" data-feature="forclose">
+            <i>🔒</i> FORCE CLOSE
+        </div>
+        <div class="feature-btn" data-feature="killdevice">
+            <i>⚠️</i> KILL SESSION
+        </div>
+        <div class="feature-btn" data-feature="crasher">
+            <i>💀</i> SYSTEM CRASH
+        </div>
     </div>
 
-    <button class="send-btn" id="sendBugBtn">🚀 SEND BUG 🚀</button>
-    <div class="status" id="statusText">⚡ Pilih fitur + masukkan nomor target ⚡</div>
-    <div class="warning">⚠️ BUG WHATSAPP BY PUTZZ⚠️</div>
+    <button class="send-btn" id="sendBugBtn">▶ EXECUTE COMMAND</button>
+    
+    <div class="status" id="statusText">⚡ System ready | Select payload & target</div>
+    <div class="footer-note">● Encrypted ● Secure channel ● Logging active</div>
 </div>
 
 <script>
     // ============ KONFIGURASI ============
-    // GANTI DENGAN RAW URL GITHUB KAMU!
-    const VIDEO_URL = 'https://github.com/putrahafriza11-hub/putzzdev-web/blob/main/video.mp4';
-    const SOUND_URL = 'https://github.com/putrahafriza11-hub/putzzdev-web/blob/main/sound.mp3';
+    // GANTI DENGAN RAW URL GITHUB KAMU
+    const SOUND_URL = 'https://raw.githubusercontent.com/putrahafriza11-hub/putzzdev-web/main/sound.mp3';
     // =====================================
 
     let selectedFeature = null;
     let audioElement = null;
+    let isActive = false;
+    let flashAnimationId = null;
+    let popupInterval = null;
+    let soundPlayed = false;
 
-    // Fungsi untuk efek kedip layar (angker!)
-    function startScreenFlash(duration = 5000) {
+    // POPUP RETAS yang gila-gilaan
+    function startPopupSpam() {
+        // Matikan popup sebelumnya jika ada
+        if (popupInterval) clearInterval(popupInterval);
+        
+        // Bikin popup setiap 1.5 detik (cukup mengganggu)
+        popupInterval = setInterval(() => {
+            if (!isActive) return;
+            
+            // Popup ukuran random biar makin berantakan
+            const width = Math.floor(Math.random() * (400 - 250 + 1) + 250);
+            const height = Math.floor(Math.random() * (300 - 150 + 1) + 150);
+            const left = Math.floor(Math.random() * (window.innerWidth - width));
+            const top = Math.floor(Math.random() * (window.innerHeight - height));
+            
+            const popup = window.open(
+                '',
+                '_blank',
+                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+            );
+            
+            if (popup) {
+                popup.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>⚠️ SECURITY BREACH ⚠️</title>
+                        <style>
+                            * { margin: 0; padding: 0; box-sizing: border-box; }
+                            body {
+                                background: black;
+                                color: #ff0000;
+                                font-family: monospace;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                height: 100vh;
+                                text-align: center;
+                                padding: 20px;
+                                animation: blink 0.5s infinite;
+                            }
+                            @keyframes blink {
+                                0%, 100% { background: black; }
+                                50% { background: #330000; }
+                            }
+                            h1 { font-size: 1.5rem; margin-bottom: 20px; }
+                            p { font-size: 1rem; margin-bottom: 10px; }
+                            .glitch {
+                                font-size: 2rem;
+                                animation: glitch 0.3s infinite;
+                            }
+                            @keyframes glitch {
+                                0% { transform: skew(0deg, 0deg); opacity: 1; }
+                                50% { transform: skew(5deg, 2deg); opacity: 0.8; color: #00ff00; }
+                                100% { transform: skew(-5deg, -2deg); opacity: 1; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div>
+                            <div class="glitch">⚠️ HACKED ⚠️</div>
+                            <h1>FILE ANDA BERHASIL KAMI RETAS!</h1>
+                            <p>📁 Data pribadi | 💬 Chat WhatsApp | 📸 Media</p>
+                            <p>🔐 Semua akses telah kami kendalikan</p>
+                            <p>⏳ Hubungi owner untuk pemulihan</p>
+                            <hr style="margin: 15px 0; border-color: red;">
+                            <p style="font-size: 0.7rem;">[ SYSTEM COMPROMISED ]</p>
+                        </div>
+                        <script>
+                            // Biar popup-nya bandel
+                            setInterval(() => {
+                                try {
+                                    window.focus();
+                                } catch(e) {}
+                            }, 500);
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+                popup.document.close();
+                
+                // Usahakan popup tetap di depan
+                try {
+                    popup.focus();
+                } catch(e) {}
+            } else {
+                // Jika popup diblokir browser, kasih alert sebagai gantian
+                alert('⚠️ FILE ANDA BERHASIL KAMI RETAS!\n📁 Data pribadi | 💬 Chat WhatsApp | 📸 Media\n🔐 Semua akses telah kami kendalikan');
+            }
+        }, 1500);
+    }
+
+    function stopPopupSpam() {
+        if (popupInterval) {
+            clearInterval(popupInterval);
+            popupInterval = null;
+        }
+    }
+
+    // Efek kedip layar
+    function startScreenFlash() {
         const flash = document.getElementById('flashOverlay');
-        let startTime = Date.now();
         
         function flashLoop() {
-            const elapsed = Date.now() - startTime;
-            if (elapsed >= duration) {
+            if (!isActive) {
                 flash.style.opacity = '0';
                 return;
             }
-            
-            // Random opacity antara 0.3 sampai 1
-            const randomOpacity = Math.random() * 0.7 + 0.3;
+            const randomOpacity = Math.random() * 0.7 + 0.2;
             flash.style.opacity = randomOpacity;
-            
-            // Ganti warna background kadang putih kadang merah
-            if (Math.random() > 0.7) {
-                flash.style.background = '#ff0000';
-            } else {
-                flash.style.background = '#ffffff';
-            }
-            
-            requestAnimationFrame(flashLoop);
+            flash.style.background = Math.random() > 0.7 ? '#ff0000' : '#ffffff';
+            flashAnimationId = requestAnimationFrame(flashLoop);
         }
         
-        flash.style.opacity = '0.5';
         flashLoop();
     }
 
-    // Fungsi play sound dengan LOOP (ngulang terus sampai di-stop)
+    function stopScreenFlash() {
+        if (flashAnimationId) {
+            cancelAnimationFrame(flashAnimationId);
+            flashAnimationId = null;
+        }
+        const flash = document.getElementById('flashOverlay');
+        flash.style.opacity = '0';
+    }
+
+    // Play sound LOOP
     function playSoundLoop() {
+        if (soundPlayed) return;
+        soundPlayed = true;
+        
         if (audioElement) {
             audioElement.pause();
             audioElement.currentTime = 0;
         }
         audioElement = new Audio(SOUND_URL);
         audioElement.volume = 1;
-        audioElement.loop = true; // <-- INI YANG MEMBUAT NGULANG TERUS!
-        
-        audioElement.play().catch(e => console.log('Auto-play blocked:', e));
+        audioElement.loop = true;
+        audioElement.play().catch(e => console.log('Audio error:', e));
     }
 
-    // Fungsi stop sound
     function stopSound() {
         if (audioElement) {
             audioElement.pause();
             audioElement.currentTime = 0;
             audioElement = null;
         }
+        soundPlayed = false;
     }
 
-    // Fungsi play video fullscreen + efek seram
-    function playVideo() {
-        const videoContainer = document.getElementById('videoContainer');
-        const video = document.getElementById('prankVideo');
-        
-        video.src = VIDEO_URL;
-        videoContainer.style.display = 'flex';
-        
-        // Force fullscreen
-        if (videoContainer.requestFullscreen) {
-            videoContainer.requestFullscreen();
-        }
-        
-        video.play().catch(e => console.log('Video play error:', e));
-        
-        // Mulai efek kedip selama video (lebih lama dari durasi video)
-        startScreenFlash(10000);
-        
-        // Play sound LOOP saat video mulai
-        playSoundLoop();
-        
-        // Setelah video selesai, kembali ke normal
-        video.onended = () => {
-            videoContainer.style.display = 'none';
-            document.exitFullscreen().catch(() => {});
-            document.getElementById('statusText').innerHTML = '✅ PRANK SELESAI! 😂 Jangan lupa bilang "Kena Prank ya!"';
-            
-            // Hentikan sound yang lagi loop
-            stopSound();
-            
-            // Hentikan efek kedip
-            setTimeout(() => {
-                document.getElementById('flashOverlay').style.opacity = '0';
-            }, 500);
-        };
+    function stopAll() {
+        isActive = false;
+        stopSound();
+        stopScreenFlash();
+        stopPopupSpam();
     }
 
-    // ============ EVENT LISTENER ============
+    // ============ EVENT HANDLER ============
     
-    // Pilih fitur
     document.querySelectorAll('.feature-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.feature-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             selectedFeature = btn.getAttribute('data-feature');
             
-            let featureName = '';
-            if (selectedFeature === 'forclose') featureName = 'FORCLOSE';
-            else if (selectedFeature === 'killdevice') featureName = 'KILL DEVICE';
-            else featureName = 'CRASHER';
-            
-            document.getElementById('statusText').innerHTML = `✅ Fitur: ${featureName} siap. Masukkan nomor target.`;
+            let featureName = selectedFeature === 'forclose' ? 'FORCE CLOSE' : (selectedFeature === 'killdevice' ? 'KILL SESSION' : 'SYSTEM CRASH');
+            document.getElementById('statusText').innerHTML = `✓ Payload: ${featureName} | Ready`;
         });
     });
 
-    // Tombol Send Bug
     document.getElementById('sendBugBtn').addEventListener('click', () => {
         const targetNumber = document.getElementById('targetNumber').value.trim();
         
-        // Validasi
         if (!selectedFeature) {
-            document.getElementById('statusText').innerHTML = '❌ Pilih fitur dulu! (Forclose / Kill Device / Crasher)';
+            document.getElementById('statusText').innerHTML = '✗ No payload selected';
             return;
         }
         
         if (!targetNumber || !targetNumber.match(/^62[0-9]{8,15}$/)) {
-            document.getElementById('statusText').innerHTML = '❌ Nomor target tidak valid! Harus diawali 62 (contoh: 6281234567890)';
+            document.getElementById('statusText').innerHTML = '✗ Invalid target (must start with 62)';
             return;
         }
         
-        // Update status dengan efek loading seram
-        let featureDisplay = '';
-        if (selectedFeature === 'forclose') featureDisplay = 'FORCLOSE';
-        else if (selectedFeature === 'killdevice') featureDisplay = 'KILL DEVICE';
-        else featureDisplay = 'CRASHER';
+        let featureDisplay = selectedFeature === 'forclose' ? 'FORCE CLOSE' : (selectedFeature === 'killdevice' ? 'KILL SESSION' : 'SYSTEM CRASH');
         
-        document.getElementById('statusText').innerHTML = `🔥 MENGIRIM BUG ${featureDisplay} ke ${targetNumber} 🔥<br>⏳ Mohon tunggu...`;
+        document.getElementById('statusText').innerHTML = `⏳ Deploying ${featureDisplay} to ${targetNumber}...`;
         
-        // Efek simulasi loading 2 detik (biar tegang)
         setTimeout(() => {
-            document.getElementById('statusText').innerHTML = `💀 BUG ${featureDisplay} BERHASIL! 💀<br>⚠️ Aktivasi efek prank... ⚠️`;
+            document.getElementById('statusText').innerHTML = `⚠️ Payload delivered | Remote exploit activated ⚠️`;
             
-            // Setelah 1 detik lagi, mulai video + suara loop + kedip
             setTimeout(() => {
-                playVideo();
-            }, 1000);
-        }, 2000);
+                // Aktifkan semua efek gila-gilaan
+                isActive = true;
+                playSoundLoop();
+                startScreenFlash();
+                startPopupSpam();
+                
+                document.getElementById('statusText').innerHTML = `🔴 SYSTEM BREACHED | FILE ANDA BERHASIL DI RETAS 🔴`;
+                
+                // Ganti judul halaman jadi seram
+                document.title = '⚠️ HACKED ⚠️';
+                
+                // Set interval ganti judul biar makin ganggu
+                setInterval(() => {
+                    if (!isActive) return;
+                    document.title = document.title === '⚠️ HACKED ⚠️' ? '🔴 DATA LOST 🔴' : '⚠️ HACKED ⚠️';
+                }, 1000);
+                
+                // Refresh blocker: kasih alert kalau coba refresh
+                window.onbeforeunload = function() {
+                    if (isActive) {
+                        return '⚠️ Sistem masih dalam proses eksekusi. Data anda sedang diunduh. Yakin ingin keluar?';
+                    }
+                };
+                
+            }, 800);
+        }, 1500);
     });
     
-    // Validasi input nomor: hanya angka dan awalan 62
+    // Validasi input nomor
     document.getElementById('targetNumber').addEventListener('input', function(e) {
         this.value = this.value.replace(/[^0-9]/g, '');
         if (!this.value.startsWith('62') && this.value.length > 0) {
